@@ -44,6 +44,7 @@
       <v-layout row wrap>
         <Title></Title>     <!-- Title Component -->
       </v-layout>
+      <Winner></Winner>
     </main>
 
   </v-app>
@@ -51,6 +52,7 @@
 
 <script>
 import Title from '@/components/Title'
+import Winner from '@/components/Winner'
 export default {
   data () {
     return {
@@ -64,7 +66,8 @@ export default {
     }
   },
   components: {
-    Title
+    Title,
+    Winner
   }
 }
 </script>
