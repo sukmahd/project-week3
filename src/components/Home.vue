@@ -43,6 +43,7 @@
     <main>
       <v-layout row wrap>
         <Title></Title>     <!-- Title Component -->
+        <Content></Content> <!-- Content Component -->
       </v-layout>
     </main>
 
@@ -50,6 +51,7 @@
 </template>
 
 <script>
+import Content from '@/components/Content'
 import Title from '@/components/Title'
 export default {
   data () {
@@ -64,7 +66,8 @@ export default {
     }
   },
   components: {
-    Title
+    Title,
+    Content
   }
 }
 </script>
