@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <!-- Vue -->
+      <script src="https://unpkg.com/vue/dist/vue.js"></script>
+      <!-- Firebase -->
+      <script src="https://gstatic.com/firebasejs/4.0.0/firebase.js"></script>
+      <!-- VueFire -->
+      <script src="https://unpkg.com/vuefire/dist/vuefire.js"></script>
+
+      <style media="screen">
+        .track div p{
+          background-image: url('img/mobil.png');
+          background-size: 45px 20px;
+          background-repeat: no-repeat;
+        }
+
+      </style>
+    </head>
+  <body>
+    <div id="app">
+        <div class="container">
+          <div class="row">
+            <h1 class="text-center">Guess The Dice Win the Race</h1>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <p v-for="dice in dices">{{dice.dice}}
+                <button @click="randomDadu(dice)" type="button" name="button">Random Dice</button></p>
+                <p>{{hasil}}</p>
+              <div>
+                <ul class="list-group">
+                  <li class="list-group-item" v-for="todo in todos">
+                    <span class="badge">{{todo.score}}</span>
+                    {{todo.text}}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <ul>
+                <div v-for="todo in todos">
+                  <div class="row">
+                    <a :href="'#'+todo.text" class="btn btn-info" data-toggle="collapse">{{todo.text}}</a>
+                    <hr>
+                    <div :id="todo.text" class="collapse">
+                      <input :value="todo.text"  @input="updateTodoText(todo, $event.target.value)">
+                      <input :value="todo.number" @input="updateTodoNumber(todo, $event.target.value)">
+                      <!-- <button @click="removeTodo(todo)">X</button> -->
+                    </div>
+                    <hr>
+                  </div>
+                </div>
+              </ul>
+            </div>
+          </div>
+          <div class="row track" v-for="todo in todos">
+            <hr>
+            <div class="col-md-1">
+              <p v-if="todo.score == 0">O</p>
+            </div>
+            <div class="col-md-1">
+              <p v-if="todo.score == 1">O</p>
+            </div>
+            <div class="col-md-1">
+              <p v-if="todo.score == 2">O</p>
+            </div>
+            <div class="col-md-1">
+              <p v-if="todo.score == 3">O</p>
+            </div>
+            <div class="col-md-1">
+              <p v-if="todo.score == 4">O</p>
+            </div>
+            <div class="col-md-1">
+              <p v-if="todo.score == 5">O</p>
+            </div>
+            <div class="col-md-1">
+              <p v-if="todo.score == 6">O</p>
+            </div>
+            <div class="col-md-1">
+              <p v-if="todo.score == 7">O</p>
+            </div>
+            <div class="col-md-1">
+              <p v-if="todo.score == 8">O</p>
+            </div>
+            <div class="col-md-1">
+              <p v-if="todo.score == 9">O</p>
+            </div>
+            <div class="col-md-1">
+              <p v-if="todo.score == 10">O</p>
+            </div>
+            <div class="col-md-1">
+              <p v-if="todo.score == 11">O</p>
+            </div>
+          </div>
+          <div class="row">
+            <h1 class="text-center">{{winner}}</h1>
+
+            <button v-if="winner != ''" @click="resetRace()" type="button" name="button">Restart</button>
+          </div>
+        </div>
+        <!-- <input
+          v-model.trim="newTodoText"
+          placeholder="Add new todo"
+        >
+        <input
+          v-model.trim="number"
+          placeholder="Number"
+        >
+        <button type="button" @click="addTodo" name="button">Add</button> -->
+      </div>
+
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+    <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyBdzJtNH6bGdR2EJBx3AkZkNFZ9GAXVWj4",
+      authDomain: "fir-demo-project-98fc0.firebaseapp.com",
+      databaseURL: "https://fir-demo-project-98fc0.firebaseio.com",
+      projectId: "fir-demo-project-98fc0",
+      storageBucket: "fir-demo-project-98fc0.appspot.com",
+      messagingSenderId: "50033608155"
+    };
+
+    var firebaseApp = firebase.initializeApp(config)
+    var db = firebaseApp.database()
+
+    var todosRef = db.ref('todos')
+    var diceRef = db.ref('dice')
+
+    new Vue({
+      el: '#app',
+      data: {
+        newTodoText: '',
+        number: '',
+        dice: 0
+      },
+      firebase: {
+        todos: todosRef.limitToLast(2),
+        dices: diceRef.limitToLast(1)
+      },
+      computed:{
+        hasil:function(){
+          if(this.dices[0].dice == this.todos[0].number){
+            if(this.todos[0].score < 11){
+              this.todos[0].score++
+              return `${this.todos[0].text} move`
+            }else {
+              return `${this.todos[0].text} Win The Race`
+            }
+          }else if(this.dices[0].dice == this.todos[1].number) {
+            if(this.todos[1].score < 11){
+              this.todos[1].score++
+              return `${this.todos[1].text} move`
+            }else {
+              return `${this.todos[1].text} Win The Race`
+            }
+          }else {
+            return 'no one move'
+          }
+        },
+        winner:function(){
+          if (this.todos[0].score == 11) {
+            return `${this.todos[0].text} Win The Race`
+          }else if(this.todos[1].score == 11) {
+            return `${this.todos[1].text} Win The Race`
+          }else {
+            return ''
+          }
+        }
+      },
+      methods: {
+        randomDadu: function(dice){
+          var num = Math.floor((Math.random() * 6) + 1);
+          diceRef.child(dice['.key']).child('dice').set(num)
+        },
+        addTodo: function () {
+          if (this.newTodoText) {
+            todosRef.push({
+              text: this.newTodoText,
+              number: this.number,
+              score: 0
+            })
+            this.newTodoText = ''
+            this.number = ''
+          }
+        },
+        updateTodoText: function (todo, newText) {
+        	todosRef.child(todo['.key']).child('text').set(newText)
+        },
+        updateTodoNumber: function(todo, newText){
+          todosRef.child(todo['.key']).child('number').set(newText)
+        },
+        updateTodoScore: function(todo, score){
+          todosRef.child(todo['.key']).child('score').set(score)
+        },
+        removeTodo: function (todo) {
+          todosRef.child(todo['.key']).remove()
+        },
+        resetRace: function(){
+          this.todos[0].number = 0
+          this.todos[0].score = 0
+          this.todos[1].number = 0
+          this.todos[1].score = 0
+        }
+      }
+    })
+
+
+
+    </script>
+  </body>
+</html>
