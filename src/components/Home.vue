@@ -43,6 +43,7 @@
     <main>
       <v-layout row wrap>
         <Title></Title>     <!-- Title Component -->
+        <Sidebar></Sidebar>
       </v-layout>
     </main>
 
@@ -50,6 +51,7 @@
 </template>
 
 <script>
+import Sidebar from '@/components/Sidebar'
 import Title from '@/components/Title'
 export default {
   data () {
@@ -64,7 +66,8 @@ export default {
     }
   },
   components: {
-    Title
+    Title,
+    Sidebar
   }
 }
 </script>
